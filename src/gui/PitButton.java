@@ -1,8 +1,5 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 
 /**
@@ -15,16 +12,20 @@ import javax.swing.JButton;
  *
  */
 @SuppressWarnings("serial")
-public class PitButton extends JButton implements ActionListener  {
-	int pebbles = 0;
+public class PitButton extends JButton  {
+	private int pebbles = 0;
 
-	public PitButton(int numPebbles) {
+	public PitButton(int numPebbles, int numSquares) {
 		pebbles = numPebbles;
 		this.setText(Integer.toString(pebbles));
-		this.addActionListener(this);
+		this.setSize(numSquares / 2, numSquares / 2);
 	}
 	
-	public void actionPerformed(ActionEvent e) {
-		//distribute pebbles
+	public int getPebbles() {
+		return pebbles;
+	}
+	
+	public void setPebbles(int numPebbles) {
+		pebbles = numPebbles;
 	}
 }
