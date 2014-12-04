@@ -1,12 +1,11 @@
-import gui.GameInterface;
+
 
 /**
  * GameDriver.java
  * 
- * The driver of our AI program game. Creates the game board and GUI. Handles human and computer
- * players.
+ * The driver of our AI program game. Creates the game instance and GUI. 
  * 
- * @author Jared Brown
+ * @author Jared Brown & Matt Mathis
  *
  */
 
@@ -16,8 +15,8 @@ public class GameDriver {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new GameInterface();
-
+		AIGame game = new AIGame();
+		game.setup();
 	}
 
 }
