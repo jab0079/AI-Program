@@ -47,7 +47,7 @@ public class AIGame implements ActionListener {
 			
 		} else {
 			for (int i = 0; i < gui.pits.length; i++) {  // distribute pebbles
-				if (buttonPressed == gui.pits[i]) {
+				if (buttonPressed == gui.pits[i] && gui.pits[i].getPebbles() != 0) {
 					pebbles = gui.distributePebbles(i);
 					swapTurn();
 				}
@@ -77,27 +77,27 @@ public class AIGame implements ActionListener {
 		
 		switch(p1) {
 			case 1:
-				//player1 = new MinimaxPlayer(ply);
+				//player1 = new AndOrPlayer(true, ply);
 				break;
 			case 2:
-				//player1 = new AndOrPlayer(ply);
+				player1 = new MinimaxPlayer(true, ply);
 				break;
 			default:
 				break;
 		}
 		switch(p2) {
 			case 1:
-				//player2 = new MinimaxPlayer(ply);
+				//player2 = new AndOrPlayer(false, ply);
 				break;
 			case 2:
-				//player2 = new AndOrPlayer(ply);
+				player2 = new MinimaxPlayer(false, ply);
 				break;
 			default:
 				break;
 		}
 		
 		// setup pebbles game state array
-		pebbles = new int[numSquares];
+		pebbles = new int[numSquares * 2];
 		Arrays.fill(pebbles, numPebbles);
 		
 		// setup game board and begin the new game
@@ -126,7 +126,7 @@ public class AIGame implements ActionListener {
 			pebbles = gui.distributePebbles(move);
 			swapTurn();
 		} else {
-			int move = player1.makeMove(pebbles);
+			int move = player2.makeMove(pebbles);
 			pebbles = gui.distributePebbles(move);
 			swapTurn();
 		}

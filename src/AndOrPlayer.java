@@ -8,10 +8,8 @@
  */
 public class AndOrPlayer extends Player {
 
-	public AndOrPlayer(int ply) {
-		super(ply);
-		// TODO Auto-generated constructor stub
-		
+	public AndOrPlayer(Boolean isPlayer1, int ply) {
+		super(isPlayer1, ply);
 	}
 
 	@Override
