@@ -75,7 +75,7 @@ public abstract class Player {
 		}
 	}
 	
-	public boolean terminal_test(int[] new_state) {
+	public boolean terminal_test(int[] new_state, Boolean isP1sTurn) {
 		int pebbles1 = 0, pebbles2 = 0;
 		
 		// get total pebbles for each player
@@ -85,18 +85,18 @@ public abstract class Player {
 		}
 		
 		// if either side is empty & that person goes next, then return true
-		if (pebbles1 == 0 && !isPlayer1) // player 2 wins
+		if (pebbles1 == 0 && !isP1sTurn) // player 2 wins
 			return true;
-		else if (pebbles2 == 0 && isPlayer1)  // player 1 wins		
+		else if (pebbles2 == 0 && isP1sTurn)  // player 1 wins		
 			return true;
 		else
 			return false;
 	}
 
-	public int[] possibleActions(int[] state) {
+	public int[] possibleActions(int[] state, Boolean isP1) {
 		List<Integer> list = new ArrayList<Integer>();
 		
-		if (isPlayer1) {
+		if (isP1) {
 			for (int i = state.length / 2; i < state.length; i++) {
 				if (state[i] != 0)
 					list.add(i);

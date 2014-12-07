@@ -19,13 +19,19 @@ import gui.*;
 public class AIGame implements ActionListener {
 	GameInterface<AIGame> gui;
 	Player player1, player2;
-	boolean gameOver = true, player1sTurn = false, step = false;
+	boolean player1AI = false, player2AI = false,
+			gameOver = true, player1sTurn = false,
+			step = false;
 	int ply = 1;
 	int[] pebbles;
 	
 	public AIGame() {
 		gui = new GameInterface<AIGame>(this);
 		
+	}
+	
+	public static void main(String[] args) {
+		new AIGame();
 	}
 
 	/*
@@ -75,12 +81,17 @@ public class AIGame implements ActionListener {
 		int p1 = gui.player1ComboBox.getSelectedIndex(),
 			p2 = gui.player2ComboBox.getSelectedIndex();
 		
+		player1AI = false;
+		player2AI = false;
+		
 		switch(p1) {
 			case 1:
 				//player1 = new AndOrPlayer(true, ply);
+				player1AI = true;
 				break;
 			case 2:
 				player1 = new MinimaxPlayer(true, ply);
+				player1AI = true;
 				break;
 			default:
 				break;
@@ -88,9 +99,11 @@ public class AIGame implements ActionListener {
 		switch(p2) {
 			case 1:
 				//player2 = new AndOrPlayer(false, ply);
+				player2AI = true;
 				break;
 			case 2:
 				player2 = new MinimaxPlayer(false, ply);
+				player2AI = true;
 				break;
 			default:
 				break;
@@ -108,8 +121,11 @@ public class AIGame implements ActionListener {
 				gui.runStepButton.setText("Run");
 			
 			gui.runStepButton.setEnabled(true);
-			gui.options.repaint();
+		} else {
+			gui.runStepButton.setEnabled(false);
 		}
+		
+		gui.options.repaint();
 		gui.setupGameBoard(this, numSquares * 2, numPebbles);
 		gameOver = false;
 		player1sTurn = false;
@@ -121,11 +137,11 @@ public class AIGame implements ActionListener {
 	 * game between two computers to completion or steps through each AI move.
 	 */
 	private void runStep() {
-		if (player1sTurn) {
+		if (player1sTurn && player1AI) {
 			int move = player1.makeMove(pebbles);
 			pebbles = gui.distributePebbles(move);
 			swapTurn();
-		} else {
+		} else if (!player1sTurn && player2AI) {
 			int move = player2.makeMove(pebbles);
 			pebbles = gui.distributePebbles(move);
 			swapTurn();
@@ -137,34 +153,24 @@ public class AIGame implements ActionListener {
 	 * the pits on the game board accordingly.
 	 */
 	private void swapTurn() {
-		if (player1sTurn) { // switch turn to player2
-			player1sTurn = false;
-			
-			checkIfGameOver();
-			if (gameOver) { // if game is over, disable all pits
-				for (int i = 0; i < gui.pits.length; i++) {
-					gui.pits[i].setEnabled(false);
-				}
-			} else { // otherwise switch enabled pits
+		player1sTurn = !player1sTurn; // switch turns
+		
+		for (int i = 0; i < gui.pits.length; i++) { // disable all pits
+			gui.pits[i].setEnabled(false);
+		}
+		
+		checkIfGameOver();
+		if (!gameOver) { // if game is not over
+			if (player1sTurn && !player1AI){ // if player1's turn & player1 is human
 				for (int i = 0; i < gui.pits.length / 2; i++) {
-					gui.pits[i + (gui.pits.length / 2)].setEnabled(false);  // disable player1's pits
-					gui.pits[i].setEnabled(true);  // enable player2's pits
+					gui.pits[i + (gui.pits.length / 2)].setEnabled(true); // enable player1's pits
 				}
-			}
-		} else { // switch turn to player1
-			player1sTurn = true;
-			
-			checkIfGameOver();
-			if (gameOver) { // if game is over, disable all pits
-				for (int i = 0; i < gui.pits.length; i++) {
-					gui.pits[i].setEnabled(false); 
+			} 
+			else if(!player1sTurn && !player2AI) { // if player2's turn & player2 is human
+				for (int i = 0; i < gui.pits.length / 2; i++) { 
+					gui.pits[i].setEnabled(true); // enable player2's pits
 				}
-			} else { // otherwise switch enabled pits
-				for (int i = 0; i < gui.pits.length / 2; i++) {
-					gui.pits[i + (gui.pits.length / 2)].setEnabled(true);  // enable player1's pits
-					gui.pits[i].setEnabled(false);  // disable player2's pits
-				}
-			}		
+			} 
 		}
 	}
 	

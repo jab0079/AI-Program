@@ -1,6 +1,7 @@
 package gui;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -123,7 +124,7 @@ public class GameInterface<AIGame> extends JFrame  {
 		for (int i = 0; i < numSquares; i++) {
 			pits[i] = new PitButton(numPebbles, numSquares);
 			pits[i].addActionListener((ActionListener) game);
-
+			pits[i].setFont(new Font("Arial", Font.BOLD, 18));
 			if (i < numSquares / 2) { // make Player2's squares orange & disabled
 				pits[i].setBackground(new Color(255, 153, 51));
 			} else { // make Player1's squares blue
