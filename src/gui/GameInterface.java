@@ -21,7 +21,7 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class GameInterface<AIGame> extends JFrame  {
 	public static final int[] DEFAULT_NUM_PITS = {2, 3, 4, 5, 6, 7, 8, 9, 10}, 
-			DEFAULT_NUM_PEBBLES_PLYS = {1, 2, 3, 4, 5};
+			DEFAULT_NUM_PEBBLES_PLYS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	public static final String[] DEFAULT_PLAYERS = new String[] {"Human",
 			"Computer - AND-OR", "Computer - Minimax"};
 	
@@ -55,7 +55,7 @@ public class GameInterface<AIGame> extends JFrame  {
 	public GameInterface(AIGame game) {
 		super("AI Pebble Game");
 		setSize(1000, 500);
-		setResizable(true);
+		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		// setup menu options panel in gui

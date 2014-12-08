@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+package ai;
 
 /**
  * MinimaxPlayer.java
@@ -12,27 +11,35 @@ import java.util.List;
 public class MinimaxPlayer extends Player {
 	private int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
 
+	/*
+	 * Minimax Player constructor
+	 */
 	public MinimaxPlayer(Boolean isPlayer1, int ply) {
 		super(isPlayer1, ply);
 	}
 
+	/*
+	 * Overrides the Player class method for makeMove. Receives the current game state and
+	 *  implements the alpha-beta Minimax algorithm to select move to make and returns
+	 *  the index of the pit corresponding to that move 
+	 */
 	@Override
 	public int makeMove(int[] state) { // Alpha-beta search
 		int val = Integer.MIN_VALUE, action = -1, depth = 1;
 			
-		
+		// for each action for the player from the current state
 		for (int a : possibleActions(state, isPlayer1)) {
-			int[] new_state = distributePebbles(state, a);
+			// find the new state resulting from that action & its heuristic value
+			int[] new_state = distributePebbles(state, a); 
 			int new_val = min(new_state, depth);
 			
-			if (new_val > val) {
+			if (new_val > val) { // if that action results in a higher valued state, then keep it
 				val = new_val;
 				action = a;
 			}
-			
-			if (val >= beta) { // prune based on beta
+			if (val >= beta)  // prune based on beta
 				return action;
-			} else {
+			else {
 				if (val > alpha)  // update alpha
 					alpha = val;
 			}
@@ -41,6 +48,12 @@ public class MinimaxPlayer extends Player {
 		return action;
 	}
 	
+	/*
+	 * The Min search part of Minimax, which receives a state and depth and returns
+	 *  the move that would result in the minimum possible game state for the player.
+	 *  If the state is a leaf or the search has reached its ply limit, then the value 
+	 *  of the current state is returned.
+	 */
 	private int min(int[] state, int depth) {
 		if (terminal_test(state, !isPlayer1) || depth == ply)
 			return utility(state);
@@ -62,6 +75,12 @@ public class MinimaxPlayer extends Player {
 		return val;
 	}
 
+	/*
+	 * The Max search part of Minimax, which receives a state and depth and returns
+	 *  the move that would result in the maximum possible game state for the player.
+	 *  If the state is a leaf or the search has reached its ply limit, then the value 
+	 *  of the current state is returned.
+	 */
 	private int max(int[] state, int depth) {
 		if (terminal_test(state, isPlayer1) || depth == ply)
 			return utility(state);

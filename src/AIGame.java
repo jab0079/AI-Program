@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import javax.swing.JButton;
 
+import ai.AndOrPlayer;
+import ai.MinimaxPlayer;
+import ai.Player;
 import gui.*;
 
 
@@ -44,8 +47,12 @@ public class AIGame implements ActionListener {
 		if (buttonPressed == gui.newGameButton) { // start new game 
 			newGame();
 			
-			while (run && !gameOver)
+			if (run && player1AI && player2AI) { // if both players are AI
+				while (!gameOver) // run through entire game
+					runStep();
+			} else if (run && player1AI) {
 				runStep();
+			}
 		} else if (buttonPressed == gui.runStepButton) // step through AI move
 			runStep();
 		else { // check which pit button was pressed & if it has pebbles to move
@@ -54,7 +61,7 @@ public class AIGame implements ActionListener {
 					pebbles = gui.distributePebbles(i);
 					swapTurn();
 					
-					if (run)
+					if (run && !gameOver)
 						runStep();
 				}
 			}

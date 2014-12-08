@@ -1,12 +1,11 @@
+package ai;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 /**
  * Player.java
  * 
- * The AI computer player.
+ * The AI computer player abstract class.
  * 
  * @author Jared Brown & Matt Mathis
  *
@@ -14,26 +13,30 @@ import java.util.List;
 public abstract class Player {
 	protected Boolean isPlayer1;
 	protected int ply;
-	// HashTable transpositionTable
 	
 	public Player(Boolean isPlayer1, int ply) {
 		this.isPlayer1 = isPlayer1;
 		this.ply = ply;
 	} 
 	
+	/*
+	 * Receives the current game state and returns the index of the pit corresponding to the move 
+	 */
 	public abstract int makeMove(int[] state);
 	
+	/*
+	 * Finds the heuristic value of the game state. This function places value on the player having
+	 *  pebbles in squares to the left of its POV. 
+	 */
 	protected int utility(int[] state) {
-		int utility = 0, x = state.length;
+		int utility = 0, weight = state.length / 2;
 		
 		if (isPlayer1) {
-			for (int i = state.length / 2; i < state.length; i++) {
-				utility += state[i] * (x-- / 2) * 10;
-			}
+			for (int i = state.length / 2; i < state.length; i++)
+				utility += state[i] * weight-- * 10;
 		} else {
-			for (int i = state.length / 2 - 1; i >= 0; i--) {
-				utility += state[i] * (x-- / 2) * 10;
-			}
+			for (int i = state.length / 2 - 1; i >= 0; i--)
+				utility += state[i] * weight-- * 10;
 		}
 		
 		return utility;
@@ -75,43 +78,52 @@ public abstract class Player {
 		}
 	}
 	
-	protected boolean terminal_test(int[] new_state, Boolean isP1sTurn) {
+	/*
+	 * Tests the state for a terminal state - that is one player is going next and has
+	 *  no possible moves (no pebbles on their side). Returns true if the state means the
+	 *  game is over, otherwise returns false.
+	 */
+	protected boolean terminal_test(int[] state, Boolean isP1sTurn) {
 		int pebbles1 = 0, pebbles2 = 0;
 		
 		// get total pebbles for each player
-		for (int i = 0; i < new_state.length / 2; i++) {
-			pebbles2 += new_state[i];
-			pebbles1 += new_state[i + (new_state.length / 2)];
+		for (int i = 0; i < state.length / 2; i++) {
+			pebbles2 += state[i];
+			pebbles1 += state[i + (state.length / 2)];
 		}
 		
 		// if either side is empty & that person goes next, then return true
-		if (pebbles1 == 0 && !isP1sTurn) // player 2 wins
+		if (pebbles1 == 0 && isP1sTurn) // player 1 can't go, so player 2 wins
 			return true;
-		else if (pebbles2 == 0 && isP1sTurn)  // player 1 wins		
+		else if (pebbles2 == 0 && !isP1sTurn)  // player 2 can't go, so player 1 wins		
 			return true;
 		else
 			return false;
 	}
 
+	/*
+	 * Returns the possible actions for a given state and player. A player can move any
+	 *  pit on his/her side if the pit contains pebbles. 
+	 */
 	protected int[] possibleActions(int[] state, Boolean isP1) {
 		List<Integer> list = new ArrayList<Integer>();
 		
-		if (isP1) {
+		if (isP1) { // if player1's turn 
 			for (int i = state.length / 2; i < state.length; i++) {
-				if (state[i] != 0)
+				if (state[i] != 0) // if pit contains pebbles, add it to list
 					list.add(i);
 			}
-		} else {
+		} else { // if player2's turn
 			for (int i = state.length / 2 - 1; i >= 0; i--) {
-				if (state[i] != 0)
+				if (state[i] != 0) // if pit contains pebbles, add it to list
 					list.add(i);
 			}
 		}
 		
+		// generate and return array of possible moves 
 		int[] actions = new int[list.size()];
 		for (int i = 0; i < list.size(); i++)
 			actions[i] = list.get(i);
-		
 		return actions;
 	}
 }
