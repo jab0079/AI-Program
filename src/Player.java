@@ -12,8 +12,8 @@ import java.util.List;
  *
  */
 public abstract class Player {
-	Boolean isPlayer1;
-	int ply;
+	protected Boolean isPlayer1;
+	protected int ply;
 	// HashTable transpositionTable
 	
 	public Player(Boolean isPlayer1, int ply) {
@@ -23,7 +23,7 @@ public abstract class Player {
 	
 	public abstract int makeMove(int[] state);
 	
-	public int utility(int[] state) {
+	protected int utility(int[] state) {
 		int utility = 0, x = state.length;
 		
 		if (isPlayer1) {
@@ -43,7 +43,7 @@ public abstract class Player {
 	 * Distributes the pebbles at a given pit in a counter-clockwise fashion around
 	 * the game board. 
 	 */
-	public int[] distributePebbles(int[] state, int a) {
+	protected int[] distributePebbles(int[] state, int a) {
 		// take all the pebbles from the pit at index a
 		int[] new_state = state.clone();
 		int index = a, numPebbles = state[index];
@@ -62,7 +62,7 @@ public abstract class Player {
 	/*
 	 * Gets the corrected index for the next pit in the counter-clockwise order. 
 	 */
-	public int nextPitIndex(int state_length, int i) {
+	private int nextPitIndex(int state_length, int i) {
 		int numSquaresPerSide = state_length / 2;
 		if (i == 0) {
 			return numSquaresPerSide;
@@ -75,7 +75,7 @@ public abstract class Player {
 		}
 	}
 	
-	public boolean terminal_test(int[] new_state, Boolean isP1sTurn) {
+	protected boolean terminal_test(int[] new_state, Boolean isP1sTurn) {
 		int pebbles1 = 0, pebbles2 = 0;
 		
 		// get total pebbles for each player
@@ -93,7 +93,7 @@ public abstract class Player {
 			return false;
 	}
 
-	public int[] possibleActions(int[] state, Boolean isP1) {
+	protected int[] possibleActions(int[] state, Boolean isP1) {
 		List<Integer> list = new ArrayList<Integer>();
 		
 		if (isP1) {

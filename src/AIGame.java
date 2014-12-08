@@ -21,7 +21,7 @@ public class AIGame implements ActionListener {
 	Player player1, player2;
 	boolean player1AI = false, player2AI = false,
 			gameOver = true, player1sTurn = false,
-			step = false;
+			run = false;
 	int ply = 1;
 	int[] pebbles;
 	
@@ -41,21 +41,21 @@ public class AIGame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton buttonPressed = (JButton) e.getSource();
 		
-		if (buttonPressed == gui.newGameButton) { 		 // start new game 
+		if (buttonPressed == gui.newGameButton) { // start new game 
 			newGame();
-		} else if (buttonPressed == gui.runStepButton) { // run/step
-			runStep();
 			
-			// if step is not enable, run the game to completion
-			if (!step && !gameOver) {
+			while (run && !gameOver)
 				runStep();
-			}
-			
-		} else {
+		} else if (buttonPressed == gui.runStepButton) // step through AI move
+			runStep();
+		else { // check which pit button was pressed & if it has pebbles to move
 			for (int i = 0; i < gui.pits.length; i++) {  // distribute pebbles
 				if (buttonPressed == gui.pits[i] && gui.pits[i].getPebbles() != 0) {
 					pebbles = gui.distributePebbles(i);
 					swapTurn();
+					
+					if (run)
+						runStep();
 				}
 			}
 		}	
@@ -75,7 +75,7 @@ public class AIGame implements ActionListener {
 		int numSquares = (int) gui.pitsComboBox.getSelectedItem(),
 			numPebbles = (int) gui.pebblesComboBox.getSelectedItem();
 		ply = (int) gui.plyComboBox.getSelectedItem();
-		step = gui.runStepCheckBox.isSelected();
+		run = gui.runStepCheckBox.isSelected();
 		
 		// check players for AI computer players & init them
 		int p1 = gui.player1ComboBox.getSelectedIndex(),
@@ -86,7 +86,7 @@ public class AIGame implements ActionListener {
 		
 		switch(p1) {
 			case 1:
-				//player1 = new AndOrPlayer(true, ply);
+				player1 = new AndOrPlayer(true, ply);
 				player1AI = true;
 				break;
 			case 2:
@@ -98,7 +98,7 @@ public class AIGame implements ActionListener {
 		}
 		switch(p2) {
 			case 1:
-				//player2 = new AndOrPlayer(false, ply);
+				player2 = new AndOrPlayer(false, ply);
 				player2AI = true;
 				break;
 			case 2:
@@ -112,18 +112,6 @@ public class AIGame implements ActionListener {
 		// setup pebbles game state array
 		pebbles = new int[numSquares * 2];
 		Arrays.fill(pebbles, numPebbles);
-		
-		// setup game board and begin the new game
-		if (p1 > 0 || p2 > 0) { // enable run/step button for AI players
-			if (step)
-				gui.runStepButton.setText("Step");
-			else 
-				gui.runStepButton.setText("Run");
-			
-			gui.runStepButton.setEnabled(true);
-		} else {
-			gui.runStepButton.setEnabled(false);
-		}
 		
 		gui.options.repaint();
 		gui.setupGameBoard(this, numSquares * 2, numPebbles);
@@ -161,14 +149,24 @@ public class AIGame implements ActionListener {
 		
 		checkIfGameOver();
 		if (!gameOver) { // if game is not over
-			if (player1sTurn && !player1AI){ // if player1's turn & player1 is human
-				for (int i = 0; i < gui.pits.length / 2; i++) {
-					gui.pits[i + (gui.pits.length / 2)].setEnabled(true); // enable player1's pits
+			if (player1sTurn) { // if player1's turn
+				if (!player1AI) { // if player1 is human
+					gui.runStepButton.setEnabled(false); // disable step button
+					for (int i = 0; i < gui.pits.length / 2; i++) {
+						gui.pits[i + (gui.pits.length / 2)].setEnabled(true); // enable player1's pits
+					}
+				} else if (!run && player1AI) { // if player1 is an AI & run is disabled
+					gui.runStepButton.setEnabled(true); // enable step button
 				}
 			} 
-			else if(!player1sTurn && !player2AI) { // if player2's turn & player2 is human
-				for (int i = 0; i < gui.pits.length / 2; i++) { 
-					gui.pits[i].setEnabled(true); // enable player2's pits
+			else if(!player1sTurn) { // if player2's turn
+				if (!player2AI) { // if player2 is human
+					gui.runStepButton.setEnabled(false); // disable step button
+					for (int i = 0; i < gui.pits.length / 2; i++) {
+						gui.pits[i].setEnabled(true); // enable player2's pits
+					}
+				} else if (!run && player2AI) { // if player2 is an AI & run is disabled
+					gui.runStepButton.setEnabled(true); // enable step button
 				}
 			} 
 		}

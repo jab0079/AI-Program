@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * MinimaxPlayer.java
  * 
- */
-
-/**
- * @author Jared
+ * The AI computer player using the Alpha-beta Minimax Search algorithm.
+ * 
+ * @author Jared Brown & Matt Mathis
  *
  */
 public class MinimaxPlayer extends Player {
-	int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
+	private int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
 
 	public MinimaxPlayer(Boolean isPlayer1, int ply) {
 		super(isPlayer1, ply);
@@ -49,9 +49,7 @@ public class MinimaxPlayer extends Player {
 		
 		for (int a : possibleActions(state, !isPlayer1)) {
 			int[] new_state = distributePebbles(state, a);
-			// TODO if HashTable contains new_state, return val
 			int new_val = max(new_state, depth + 1);
-			// TODO add (new_state?, new_val) to HashTable
 			
 			if (new_val < val) // update val if new_val is smaller
 				val = new_val;
@@ -72,9 +70,7 @@ public class MinimaxPlayer extends Player {
 		
 		for (int a : possibleActions(state, isPlayer1)) {
 			int[] new_state = distributePebbles(state, a);
-			// TODO if HashTable contains new_state, return val
-			int new_val = max(new_state, depth + 1);
-			// TODO add (new_state?, new_val) to HashTable
+			int new_val = min(new_state, depth + 1);
 			
 			if (new_val > val) // update val if new_val is greater
 				val = new_val;

@@ -30,9 +30,9 @@ public class GameInterface<AIGame> extends JFrame  {
 	public JPanel gameBoard = new JPanel();
 	
 	public JButton newGameButton = new JButton("New Game");
-	public JButton runStepButton = new JButton("Run");
+	public JButton runStepButton = new JButton("Step");
 	
-	private JLabel runLabel = new JLabel("Step?");
+	private JLabel runLabel = new JLabel("Run?");
 	public JCheckBox runStepCheckBox = new JCheckBox();
 	
 	private JLabel pitsLabel = new JLabel("Pits: ");
